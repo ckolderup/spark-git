@@ -1,6 +1,7 @@
 #!/usr/bin/env ruby
 
 require 'optparse'
+require 'shellwords'
 
 options = {}
 optparse = OptionParser.new { |opts|
@@ -30,7 +31,7 @@ end
 def git_hist(dir, ago_secs)
   now = Time.now
   min = now - ago_secs
-  `git --git-dir=#{dir}/.git --work-tree=#{dir} log --branches=* --author='#{ENV['USER']}' --since="#{ago_secs/WEEK_SECONDS} weeks ago" --pretty=format:'%at'`.split(" ").map {|line|
+  `git --git-dir=#{Shellwords.escape(dir)}/.git --work-tree=#{Shellwords.escape(dir)} log --branches=* --author='#{ENV['USER']}' --since="#{ago_secs/WEEK_SECONDS} weeks ago" --pretty=format:'%at' 2> /dev/null`.split(" ").map {|line|
     t = Time.at(line.split(' ').last.to_i)
     time_between?(t, min, now) ? t : nil
   }.compact.group_by {|x| x.strftime('%G%U') }.inject({}) {|res, (k, v)|
@@ -42,7 +43,7 @@ end
 def spark_vals(weeks, commits, min)
   (0...weeks).map {|i|
     commits[(min + WEEK_SECONDS * (i+1)).strftime('%G%U')] || 0
-  }.join(',')
+  }
 end
 
 def stats_since(dir, ago)
@@ -50,5 +51,9 @@ def stats_since(dir, ago)
   spark_vals(ago, git_hist(dir, ago_secs), Time.now - ago_secs)
 end
 
-print `spark #{stats_since(ARGV[0], options[:weeks])}`
+aggregate = ARGV.map {|dir|
+  stats_since(dir, options[:weeks])
+}.transpose.map{|x| x.reduce(:+)}
+
+print `spark #{aggregate.join(',')}`
 
