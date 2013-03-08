@@ -1,5 +1,20 @@
 #!/usr/bin/env ruby
 
+require 'optparse'
+
+options = {}
+optparse = OptionParser.new { |opts|
+  opts.banner = "Usage: spark-git.rb [options] dir"
+
+  options[:weeks] = 26
+  weeks_text = 'The number of weeks to look backward (default: 26)'
+  opts.on( '--weeks WEEKS', weeks_text) { |weeks|
+    options[:weeks] = weeks.to_i
+  }
+}
+
+optparse.parse!
+
 class Time
   def week
     strftime('%U').to_i
@@ -35,4 +50,5 @@ def stats_since(dir, ago)
   spark_vals(ago, git_hist(dir, ago_secs), Time.now - ago_secs)
 end
 
-print `spark #{stats_since(ARGV[0], ARGV[1].to_i)}`
+print `spark #{stats_since(ARGV[0], options[:weeks])}`
+

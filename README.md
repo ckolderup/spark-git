@@ -7,5 +7,4 @@ Usage: ruby spark-git.rb \[dir\] \[weeks\]
 
 ## TODO
 
-* Switch the weeks parameter over to an optional, flag-based parameter using OptionParser
 * Accept a list of directories and/or fileglob
