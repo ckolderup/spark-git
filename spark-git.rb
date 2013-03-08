@@ -5,7 +5,7 @@ require 'shellwords'
 
 options = {}
 optparse = OptionParser.new { |opts|
-  opts.banner = "Usage: spark-git.rb [options] dir"
+  opts.banner = "Usage: ruby spark-git.rb [--weeks=<weeks>] directories"
 
   options[:weeks] = 26
   weeks_text = 'The number of weeks to look backward (default: 26)'
