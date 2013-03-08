@@ -26,7 +26,7 @@ end
 
 def spark_vals(weeks, commits, min)
   (0...weeks).map {|i|
-    commits[(min + WEEK_SECONDS * i).strftime('%G%U')] || 0
+    commits[(min + WEEK_SECONDS * (i+1)).strftime('%G%U')] || 0
   }.join(',')
 end
 
