@@ -3,9 +3,11 @@
 require 'optparse'
 require 'shellwords'
 
+USAGE =  "Usage: ruby spark-git.rb [--weeks=<weeks>] directories"
+
 options = {}
 optparse = OptionParser.new { |opts|
-  opts.banner = "Usage: ruby spark-git.rb [--weeks=<weeks>] directories"
+  opts.banner = USAGE
 
   options[:weeks] = 26
   weeks_text = 'The number of weeks to look backward (default: 26)'
@@ -53,7 +55,17 @@ end
 
 aggregate = ARGV.map {|dir|
   stats_since(dir, options[:weeks])
-}.transpose.map{|x| x.reduce(:+)}
+}.transpose.map{|x| x.reduce(:+)}.join(',')
 
-print `spark #{aggregate.join(',')}`
+
+if aggregate.empty?
+  puts USAGE
+  exit
+end
+out = `spark #{aggregate}`
+if $?.success?
+  print out
+else
+  puts USAGE
+end
 
