@@ -3,7 +3,8 @@
 spark-git.rb draws a sparkline of git commits bucketed by week to show you
 at a glance how active you've been in a git repo (or a set of git repos).
 
-Usage: ruby spark-git.rb \[dir(s)\] \[weeks\]
+Usage: ruby spark-git.rb (--weeks \[weeks\]) \[dir(s)\]
+Defaults to 26 weeks (roughly half a year)
 
 ## Ways to use it
 
