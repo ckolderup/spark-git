@@ -6,6 +6,12 @@ at a glance how active you've been in a git repo (or a set of git repos).
 Usage: ruby spark-git.rb [--weeks=<weeks>] directories
 Defaults to 26 weeks (roughly half a year)
 
+## Before you do anything
+
+You have to install Zach Holman's excellent [spark](http://github.com/holman/spark)!
+
+If you have Mac OS X and homebrew, you can just `brew install spark`. Whew!
+
 ## Ways to use it
 
 I have this script set up in two places in my bashrc:
