@@ -4,7 +4,7 @@ require 'optparse'
 require 'shellwords'
 require 'ostruct'
 
-USAGE = "Usage: ruby spark-git.rb [--unit=(days|weeks) --range=int] directories"
+USAGE = "Usage: ruby spark-git.rb [--unit=(days|weeks) --range=int --author=name] directories"
 DAY_SECONDS = 24 * 60 * 60
 WEEK_SECONDS = 7 * DAY_SECONDS
 DAY_FMT_STRING = '%G%j'
@@ -31,7 +31,13 @@ optparse = OptionParser.new { |opts|
   options[:config].range = 26
   range_text = 'The number of days/weeks to look backward (default: 26)'
   opts.on( '--range=NUMBER', range_text) { |range|
-    options[:config].range= range.to_i
+    options[:config].range = range.to_i
+  }
+
+  options[:config].author = ENV['USER']
+  name_text = 'The author name to search git logs for'
+  opts.on( '--author=NAME', name_text) { |name|
+    options[:config].author = name
   }
 }
 
@@ -56,7 +62,7 @@ def time_between?(t, min, max)
 end
 
 def git_cmd(dir, ago_secs)
-  cmd = "git --git-dir=#{Shellwords.escape(dir)}/.git --work-tree=#{Shellwords.escape(dir)} log --branches=* --author='#{ENV['USER']}' --since=\"#{ago_secs/FLAGS.secs} #{FLAGS.unit_name}s ago\" --pretty=format:'%at' 2> /dev/null"
+  cmd = "git --git-dir=#{Shellwords.escape(dir)}/.git --work-tree=#{Shellwords.escape(dir)} log --branches=* --author=\"#{FLAGS.author}\" --since=\"#{ago_secs/FLAGS.secs} #{FLAGS.unit_name}s ago\" --pretty=format:'%at' 2> /dev/null"
   #puts cmd
   `#{cmd}`
 end
