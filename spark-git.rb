@@ -3,6 +3,7 @@
 require 'optparse'
 require 'shellwords'
 require 'ostruct'
+require 'sparkr'
 
 USAGE = "Usage: ruby spark-git.rb [--unit=(days|weeks) --range=int --author=name] directories"
 DAY_SECONDS = 24 * 60 * 60
@@ -92,14 +93,14 @@ end
 
 aggregate = ARGV.map {|dir|
   stats_since(dir, FLAGS.range)
-}.transpose.map{|x| x.reduce(:+)}.join(',')
+}.transpose.map{|x| x.reduce(:+)}
 
 
 if aggregate.empty?
   puts USAGE
   exit
 end
-out = `spark #{aggregate}`
+out = Sparkr.sparkline(aggregate)
 if $?.success?
   print out
 else

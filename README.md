@@ -3,14 +3,13 @@
 spark-git.rb draws a sparkline of git commits bucketed by week to show you
 at a glance how active you've been in a git repo (or a set of git repos).
 
-Usage: ruby spark-git.rb [--weeks=<weeks>] directories
-Defaults to 26 weeks (roughly half a year)
+Usage: ruby spark-git.rb (--unit=[days|weeks] --range=NUM --author=NAME directories
 
-## Before you do anything
+Options:
 
-You have to install Zach Holman's excellent [spark](http://github.com/holman/spark)!
-
-If you have Mac OS X and homebrew, you can just `brew install spark`. Whew!
+  * **--unit=[days|weeks]** determines whether or not the 'range' parameter is counting days or weeks. Defaults to weeks.
+  * **--range=NUM** takes a number and sees how many `unit`s should be covered. Defaults to 8.
+  * **--author=NAME** allows you to override with a custom author name to search the git history for. By default it passes in ENV['USER'].
 
 ## Ways to use it
 
