@@ -100,10 +100,5 @@ if aggregate.empty?
   puts USAGE
   exit
 end
-out = Sparkr.sparkline(aggregate)
-if $?.success?
-  print out
-else
-  puts USAGE
-end
 
+puts Sparkr.sparkline(aggregate)
